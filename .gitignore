@@ -83,3 +83,10 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
+.dart_tool/
