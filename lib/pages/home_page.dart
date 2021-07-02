@@ -62,7 +62,8 @@ class HomePage extends StatelessWidget {
                         City(
                           id: 1,
                           name: 'Jakarta',
-                          imageUrl: 'assets/images/city1.png'
+                          imageUrl: 'assets/images/city1.png',
+                          isPopular: true
                         ),
                       ),
                       SizedBox(
@@ -72,7 +73,7 @@ class HomePage extends StatelessWidget {
                         City(
                           id: 2,
                           name: 'Bandung',
-                          imageUrl: 'assets/images/city2.png'
+                          imageUrl: 'assets/images/city2.png',
                         ),
                       ),
                       SizedBox(
@@ -82,7 +83,7 @@ class HomePage extends StatelessWidget {
                         City(
                           id: 3,
                           name: 'Surabaya',
-                          imageUrl: 'assets/images/city3.png'
+                          imageUrl: 'assets/images/city3.png',
                         ),
                       ),
                       SizedBox(
