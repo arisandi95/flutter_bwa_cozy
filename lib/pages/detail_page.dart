@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bwa_cozy/models/space.dart';
 import 'package:flutter_bwa_cozy/pages/error_page.dart';
 import 'package:flutter_bwa_cozy/theme.dart';
 import 'package:flutter_bwa_cozy/widgets/facility_item.dart';
+import 'package:flutter_bwa_cozy/widgets/rating_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatelessWidget {
   // const DetailPage({Key? key}) : super(key: key);
+
+  final Space space;
+
+  DetailPage(this.space);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +31,8 @@ class DetailPage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Image.asset(
-              'assets/images/detail_img.png',
+            Image.network(
+              space.imageUrl,
               width: MediaQuery.of(context).size.width,
               height: 350,
               fit: BoxFit.cover,
@@ -61,7 +67,7 @@ class DetailPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Sands Hostel',
+                                  space.name,
                                   style: blackTextStyle.copyWith(
                                     fontSize: 22
                                   )
@@ -71,7 +77,7 @@ class DetailPage extends StatelessWidget {
                                 ),
                                 Text.rich( 
                                   TextSpan(
-                                    text: '\$56',
+                                    text: '\$ ${space.price}',
                                     style: purpleTextStyle.copyWith(
                                       fontSize: 16
                                     ),
@@ -89,33 +95,15 @@ class DetailPage extends StatelessWidget {
                               ],
                             ),
                             Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/Icon_star_solid.png',
-                                  width: 20,
-                                ),
-                                SizedBox(width : 2),
-                                Image.asset(
-                                  'assets/images/Icon_star_solid.png',
-                                  width: 20,
-                                ),
-                                SizedBox(width : 2),
-                                Image.asset(
-                                  'assets/images/Icon_star_solid.png',
-                                  width: 20,
-                                ),
-                                SizedBox(width : 2),
-                                Image.asset(
-                                  'assets/images/Icon_star_solid.png',
-                                  width: 20,
-                                ),
-                                SizedBox(width : 2),
-                                Image.asset(
-                                  'assets/images/Icon_star_solid.png',
-                                  width: 20,
-                                  color: Color(0xff989BA1)
-                                )
-                              ],
+                              children: [1,2,3,4,5].map((item){
+                                return Container(
+                                  margin: EdgeInsets.only(left: 2),
+                                  child: RatingItem(
+                                    index: item,
+                                    rating: space.rating
+                                  )
+                                );
+                              }).toList(),
                             )
                           ]
                         ),
@@ -147,17 +135,17 @@ class DetailPage extends StatelessWidget {
                             FacilityItem(
                               imageUrl: 'assets/images/001-bar-counter.png',
                               name : 'kitchen',
-                              total: 1
+                              total: space.numberOfKitchens
                             ),
                             FacilityItem(
                               imageUrl: 'assets/images/002-double-bed.png',
                               name : 'bed',
-                              total: 3
+                              total: space.numberOfBedrooms
                             ),
                             FacilityItem(
                               imageUrl: 'assets/images/003-cupboard.png',
                               name : 'cupboard',
-                              total: 4
+                              total: space.numberOfCupboards
                             ),
                           ],
                         ),
@@ -183,35 +171,21 @@ class DetailPage extends StatelessWidget {
                         height: 88,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
-                          children: [
-                            SizedBox(
-                              width: edge,
-                            ),
-                            Image.asset(
-                              'assets/images/poto1.png',
-                              height: 88,
-                              width: 110,
-                              fit: BoxFit.cover
-                            ),
-                            SizedBox(
-                              width: 18,
-                            ),
-                            Image.asset(
-                              'assets/images/poto2.png',
-                              height: 88,
-                              width: 110,
-                              fit: BoxFit.cover
-                            ),
-                            SizedBox(
-                              width: 18,
-                            ),
-                            Image.asset(
-                              'assets/images/poto3.png',
-                              height: 88,
-                              width: 110,
-                              fit: BoxFit.cover
-                            ),
-                          ],
+                          children: 
+                            space.photos.map((item){
+                               return Container(
+                                 margin: EdgeInsets.only(left: edge),
+                                 child: ClipRRect(
+                                   borderRadius: BorderRadius.circular(16),
+                                   child:  Image.network(
+                                      item,
+                                      height: 88,
+                                      width: 110,
+                                      fit: BoxFit.cover
+                                    ),
+                                 )
+                               );
+                            }).toList(),
                         ),
                       ),
 
@@ -238,13 +212,13 @@ class DetailPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Jl. Gandarian Ujung No.50 \nJakarta",
+                              '${space.address} \n${space.city}',
                               style: greyTextStyle,
                             ),
                             InkWell(
                               onTap: (){
-                                // launchUrl('https://goo.gl/maps/YtGX5VG25mnHPhEBA');
-                                launchUrl('XXXXXXXX');
+                                launchUrl(space.mapUrl);
+                                // launchUrl('XXXXXXXX');
                               },
                               child: Image.asset('assets/images/map.png', width: 40),
                             )
@@ -262,7 +236,7 @@ class DetailPage extends StatelessWidget {
                         width: MediaQuery.of(context).size.width - (2 * edge),
                         child: ElevatedButton(
                           onPressed: (){
-                            launchUrl('tel:081213700900');
+                            launchUrl('tel:${space.phone}');
                           },
                           style: ElevatedButton.styleFrom(
                             primary: purpleColor,

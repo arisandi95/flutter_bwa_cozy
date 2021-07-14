@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bwa_cozy/models/city.dart';
 import 'package:flutter_bwa_cozy/models/space.dart';
 import 'package:flutter_bwa_cozy/models/tips.dart';
+import 'package:flutter_bwa_cozy/providers/space_provider.dart';
 import 'package:flutter_bwa_cozy/theme.dart';
 import 'package:flutter_bwa_cozy/widgets/bottom_navbar_item.dart';
 import 'package:flutter_bwa_cozy/widgets/city_card.dart';
 import 'package:flutter_bwa_cozy/widgets/space_card.dart';
 import 'package:flutter_bwa_cozy/widgets/tips_card.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var spaceProvider = Provider.of<SpaceProvider>(context);
+
     return Scaffold(
       backgroundColor: whiteColor,
       body: SafeArea(
@@ -125,54 +129,32 @@ class HomePage extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: edge),
-                child: Column(
-                  children: [
-                    SpaceCard(
-                      Space(
-                        id: 1,
-                        name : 'Sands Hostel',
-                        imageUrl: 'assets/images/space1.png',
-                        price : 52,
-                        city : 'Jakarta',
-                        country : 'Indonesia',
-                        rating : 4                     
-                      ),
-                    ),
+                child:
+                  FutureBuilder(
+                    future: spaceProvider.getRecommendedSpaces(),
+                    builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                      if(snapshot.hasData){
+                        List<Space> spaceDatas = snapshot.data;
 
-                    SizedBox(
-                      height: 30,
-                    ),
+                        int index = 0;
+                     
+                        return Column(
+                          children: spaceDatas.map((item){
+                            index++;
+                            return Container(
+                              margin: EdgeInsets.only(
+                                top: index == 1 ? 0 : 30,
+                              ),
+                              child: SpaceCard(item),
+                            );
+                          }).toList(),
+                        );
+                      }
+                      return Center(child: CircularProgressIndicator(),);
 
-                    SpaceCard(
-                      Space(
-                        id: 2,
-                        name : 'Sands Hostel 2',
-                        imageUrl: 'assets/images/space2.png',
-                        price : 82,
-                        city : 'Jakarta',
-                        country : 'Indonesia',
-                        rating : 3                     
-                      ),
-                    ),
-
-                    SizedBox(
-                      height: 30,
-                    ),
-
-                    SpaceCard(
-                      Space(
-                        id: 3,
-                        name : 'Sands Hostel 3',
-                        imageUrl: 'assets/images/space3.png',
-                        price : 990,
-                        city : 'Jakarta',
-                        country : 'Indonesia',
-                        rating : 5                    
-                      ),
-                    ),
-
-                  ],
-                ),
+                    },
+                  ), 
+                
               ),
               SizedBox(
                 height: 30,
